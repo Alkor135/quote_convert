@@ -36,24 +36,19 @@ def file_select(folder_path):
         print("Файлы с корректной датой не найдены.")
 
 
-def create_range_bars(tick_df, range_size, tick_size=10):
+def create_range_bars(tick_df, range_size):
     """
-    Создает Range бары из тикового дата фрейма с зазором в один тик между барами.
+    Создает Range бары из тикового дата фрейма.
 
     Parameters:
         tick_df (pd.DataFrame): Дата фрейм с тиковыми данными
         (колонки: 'datetime', 'last', 'volume').
         range_size (float): Размер диапазона для Range баров.
-        tick_size (float, optional): Шаг цены (тик-сайз). Если не указан, будет вычислен автоматически.
 
     Returns:
         pd.DataFrame: Дата фрейм с Range барами
         (колонки: 'datetime', 'open', 'high', 'low', 'close', 'volume').
     """
-    # Если тик-сайз не задан, вычислим как минимальную разницу между ценами
-    if tick_size is None:
-        tick_size = tick_df['last'].diff().abs().replace(0, np.nan).min()
-
     # Инициализация переменных
     range_bars = []
     open_price = None
@@ -68,51 +63,40 @@ def create_range_bars(tick_df, range_size, tick_size=10):
         volume = row['volume']
         date_time = row['datetime']
 
-        # Инициализация нового бара
+        # Если новый бар, инициализируем его
         if open_price is None:
             open_price = price
             high_price = price
             low_price = price
-            vol = volume
-            bar_start_time = date_time
-            continue  # Переходим к следующей итерации
+            bar_start_time = date_time  # Устанавливаем время первого тика
 
-        # Обновление параметров текущего бара
+        # Обновляем high, low и объем
         high_price = max(high_price, price)
         low_price = min(low_price, price)
         vol += volume
 
-        # Проверка на превышение диапазона
+        # Проверяем, превышен ли range_size
         if high_price - low_price >= range_size:
             # Закрываем текущий бар
             range_bars.append({
-                'datetime': bar_start_time,
+                'datetime': bar_start_time,  # Используем время первого тика в баре
                 'open': open_price,
                 'high': high_price,
                 'low': low_price,
                 'close': price,
                 'volume': vol
             })
-
-            # Определение направления нового бара
-            if price == high_price:
-                # Вверх — начинаем новый бар на +1 тик
-                next_open_price = price + tick_size
-            else:
-                # Вниз — начинаем новый бар на -1 тик
-                next_open_price = price - tick_size
-
-            # Инициализация следующего бара с зазором
-            open_price = next_open_price
-            high_price = next_open_price
-            low_price = next_open_price
+            # Инициализируем следующий бар
+            open_price = price
+            high_price = price
+            low_price = price
             vol = 0
-            bar_start_time = date_time  # Устанавливаем время начала нового бара
+            bar_start_time = date_time  # Обновляем время начала нового бара
 
     # Добавляем последний бар, если он не завершен
     if open_price is not None:
         range_bars.append({
-            'datetime': bar_start_time,
+            'datetime': bar_start_time,  # Используем время первого тика в баре
             'open': open_price,
             'high': high_price,
             'low': low_price,

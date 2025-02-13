@@ -88,7 +88,8 @@ def create_range_bars(tick_df, range_size):
 def zip_csv_convert_to_db(pair_lst, quantity_bars):
 
     for index, pair in enumerate(pair_lst):
-        # # Вывод процента обработки
+        # Вывод процента обработки
+        print(f'Processing: {round(((index / len(pair_lst)) * 100), 2)}%')
         # sys.stdout.write(f'\rProcessing: {round(((index / len(pair_lst)) * 100), 2)}%')
         # sys.stdout.flush()
 
@@ -133,6 +134,7 @@ def zip_csv_convert_to_db(pair_lst, quantity_bars):
                 connection, cursor, row[1], row[2], row[3], row[4], row[5], row[6], row[7]
             )
         print(f'Файл {pair[1]} записан в БД. Размерность range баров: {closest_key}')
+        print()
 
 
 if __name__ == "__main__":
@@ -177,9 +179,9 @@ if __name__ == "__main__":
 
     zip_csv_convert_to_db(pair_lst, quantity_bars)
 
-    # # Выполняем команду VACUUM
-    # cursor.execute("VACUUM;")
-    #
-    # # Закрываем курсор и соединение
-    # cursor.close()
-    # connection.close()
+    # Выполняем команду VACUUM
+    cursor.execute("VACUUM;")
+
+    # Закрываем курсор и соединение
+    cursor.close()
+    connection.close()

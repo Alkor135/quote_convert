@@ -2,7 +2,6 @@
 Создает дата фрейм range баров и записывает в БД (нет зазора между барами)
 """
 
-import sys
 from pathlib import Path
 from datetime import datetime
 import sqlite3
@@ -90,8 +89,6 @@ def zip_csv_convert_to_db(pair_lst, quantity_bars):
     for index, pair in enumerate(pair_lst):
         # Вывод процента обработки
         print(f'Processing: {round(((index / len(pair_lst)) * 100), 2)}%')
-        # sys.stdout.write(f'\rProcessing: {round(((index / len(pair_lst)) * 100), 2)}%')
-        # sys.stdout.flush()
 
         size_dic = {}  # Создание словаря для подбора размера range бара
 

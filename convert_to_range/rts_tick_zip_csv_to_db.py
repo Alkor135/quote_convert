@@ -23,7 +23,7 @@ def create_range_bars(tick_df, range_size):
 
     Returns:
         pd.DataFrame: Дата фрейм с Range барами
-        (колонки: 'datetime', 'open', 'high', 'low', 'close', 'volume').
+        (колонки: 'datetime', 'open', 'high', 'low', 'close', 'volume', 'size').
     """
     # Инициализация переменных
     range_bars = []

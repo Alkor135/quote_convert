@@ -141,7 +141,7 @@ if __name__ == "__main__":
     path_zip = Path(r"C:\data_quote\data_finam_RTS_tick_zip")  # Путь к папке с zip архивами csv
     path_db = Path(fr'c:\Users\Alkor\gd\data_quote_db\{ticker}_Range.db')
     # Задайте дату в формате ГГГГММДД
-    start_date = datetime.strptime("20150101", "%Y%m%d")
+    start_date = datetime.strptime("20250101", "%Y%m%d")
     # --------------------------------------------------------------------------------------------
 
     connection = sqlite3.connect(path_db, check_same_thread=True)
